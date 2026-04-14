@@ -1,0 +1,85 @@
+<div id="tournamentModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+
+    <!-- Modal Box -->
+    <div
+        class="w-full max-w-sm sm:max-w-md lg:max-w-lg bg-gray-900 rounded-xl border border-gray-800 shadow-2xl p-5 sm:p-6 lg:p-8">
+
+        <!-- Header -->
+        <div class="mb-5 sm:mb-6">
+            <h2 class="text-white text-lg sm:text-xl font-bold">Create Tournament</h2>
+            <p class="text-gray-400 text-[10px] sm:text-xs uppercase tracking-widest">football</p>
+        </div>
+
+        <!-- Form -->
+        <form class="space-y-4 sm:space-y-5">
+
+            <!-- Name -->
+            <div>
+                <label class="text-gray-300 text-xs mb-1 block">Tournament Name</label>
+                <input type="text"
+                    class="w-full bg-gray-900 border border-gray-700 rounded-md px-3 py-2 text-white focus:outline-none focus:border-lime-500">
+            </div>
+
+            <!-- Players -->
+            <div>
+                <label class="text-gray-300 text-xs mb-1 block">Players</label>
+                <input type="number"
+                    class="w-full bg-gray-900 border border-gray-700 rounded-md px-3 py-2 text-white focus:outline-none focus:border-lime-500">
+            </div>
+
+            <!-- 🔥 Points System -->
+            <div class="space-y-2">
+                <label class="text-gray-300 text-xs block">Points System</label>
+
+                <div class="grid grid-cols-3 gap-2 sm:gap-3">
+
+                    <!-- Win -->
+                    <div>
+                        <span class="text-gray-500 text-[10px] block mb-1">Win</span>
+                        <input type="number" value="3"
+                            class="w-full bg-gray-900 border border-gray-700 rounded-md px-2 py-2 text-white text-center focus:border-lime-500 outline-none">
+                    </div>
+
+                    <!-- Draw -->
+                    <div>
+                        <span class="text-gray-500 text-[10px] block mb-1">Draw</span>
+                        <input type="number" value="1"
+                            class="w-full bg-gray-900 border border-gray-700 rounded-md px-2 py-2 text-white text-center focus:border-lime-500 outline-none">
+                    </div>
+
+                    <!-- Loss -->
+                    <div>
+                        <span class="text-gray-500 text-[10px] block mb-1">Loss</span>
+                        <input type="number" value="0"
+                            class="w-full bg-gray-900 border border-gray-700 rounded-md px-2 py-2 text-white text-center focus:border-lime-500 outline-none">
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Date -->
+            <div>
+                <label class="text-gray-300 text-xs mb-1 block">Start Date</label>
+                <input type="date"
+                    class="w-full bg-gray-900 border border-gray-700 rounded-md px-3 py-2 text-white focus:outline-none focus:border-lime-500 [color-scheme:dark]">
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex flex-col sm:flex-row gap-3 pt-2">
+
+                <button type="button" onclick="closeModal()"
+                    class="w-full sm:flex-1 border border-gray-700 text-white py-2 rounded-md text-sm hover:bg-white/5">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                    class="w-full sm:flex-1 bg-lime-500 text-black py-2 rounded-md text-sm font-bold hover:bg-lime-400">
+                    Create
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>

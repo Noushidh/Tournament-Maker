@@ -41,9 +41,8 @@
         </div>
 
         <nav id="sidebar-nav" class="flex-1 px-4 py-4 space-y-2">
-
             <a href="/admin/dashboard"
-                class="nav-link active-link group flex items-center gap-3 px-4 py-3 rounded-lg border-l-4 border-emerald-400 bg-white/5 text-emerald-400">
+                class="nav-link group flex items-center gap-3 px-4 py-3 rounded-lg border-l-4 border-transparent text-slate-400 hover:text-slate-100 hover:bg-white/5">
                 <svg class="w-5 h-5 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2">
                     <rect width="7" height="9" x="3" y="3" rx="1" />
@@ -54,7 +53,7 @@
                 <span class="text-sm font-medium">Dashboard</span>
             </a>
 
-            <a href="#"
+            <a href="/admin/tournament"
                 class="nav-link group flex items-center gap-3 px-4 py-3 rounded-lg border-l-4 border-transparent text-slate-400 hover:text-slate-100 hover:bg-white/5">
                 <svg class="w-5 h-5 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2">
@@ -65,7 +64,7 @@
                 <span class="text-sm font-medium">Tournaments</span>
             </a>
 
-            <a href="#"
+            <a href="/admin/players"
                 class="nav-link group flex items-center gap-3 px-4 py-3 rounded-lg border-l-4 border-transparent text-slate-400 hover:text-slate-100 hover:bg-white/5">
                 <svg class="w-5 h-5 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2">
@@ -75,7 +74,7 @@
                 <span class="text-sm font-medium">Players</span>
             </a>
 
-            <a href="#"
+            <a href="/admin/matches"
                 class="nav-link group flex items-center gap-3 px-4 py-3 rounded-lg border-l-4 border-transparent text-slate-400 hover:text-slate-100 hover:bg-white/5">
                 <svg class="w-5 h-5 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2">
@@ -86,7 +85,7 @@
                 <span class="text-sm font-medium">Matches</span>
             </a>
 
-            <a href="#"
+            <a href="/admin/settings"
                 class="nav-link group flex items-center gap-3 px-4 py-3 rounded-lg border-l-4 border-transparent text-slate-400 hover:text-slate-100 hover:bg-white/5">
                 <svg class="w-5 h-5 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2">
@@ -112,23 +111,26 @@
     </aside>
 
     <script>
+        // 1. Find all navigation links
         const navLinks = document.querySelectorAll('.nav-link');
 
+        // 2. Get current URL path (e.g., /admin/dashboard)
+        const currentPath = window.location.pathname;
+
         navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                // Prevent page refresh for demo
-                e.preventDefault();
+            // 3. Get the href of each link
+            const linkHref = link.getAttribute('href');
 
-                // 1. Reset all links to inactive state
-                navLinks.forEach(l => {
-                    l.classList.remove('bg-white/5', 'text-emerald-400', 'border-emerald-400');
-                    l.classList.add('text-slate-400', 'border-transparent');
-                });
-
-                // 2. Set clicked link to active state
+            // 4. Compare current path with the link's href
+            if (currentPath === linkHref) {
+                // Apply Active Styles
                 link.classList.add('bg-white/5', 'text-emerald-400', 'border-emerald-400');
                 link.classList.remove('text-slate-400', 'border-transparent');
-            });
+            } else {
+                // Ensure non-active links have the default style
+                link.classList.remove('bg-white/5', 'text-emerald-400', 'border-emerald-400');
+                link.classList.add('text-slate-400', 'border-transparent');
+            }
         });
     </script>
 </body>
