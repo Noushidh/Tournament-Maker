@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= typeof title !=='undefined' ? title : "My App" %>
+    </title>
+</head>
+
+<body>
+
+    <div style="display:flex;">
+
+        <!-- Sidebar -->
+        <%- include('partials/sidebar') %>
+
+            <!-- Main content -->
+            <div style="flex:1; padding:20px;">
+                <%- body %>
+            </div>
+
+    </div>
+
+</body>
+
+</html>
