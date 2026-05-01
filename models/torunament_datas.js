@@ -7,6 +7,12 @@ const tournamentSchema = new mongoose.Schema(
       required: true,
       trim: true
     },
+    
+    type: {
+      type: String,
+      default: "League",
+      enum: ["League", "Knockout", "Groups + Knockout"]
+    },
 
     players: {
       type: Number,

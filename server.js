@@ -6,10 +6,14 @@ import { fileURLToPath } from "url";
 import session from "express-session";
 import nocache from "nocache";
 import adminRoutes from "./routes/admin.js";
+import connectDB from "./config/connectDB.js";
 
 dotenv.config();
 
 const app = express();
+
+connectDB();
+
 
 // Fix __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -57,7 +61,7 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`http://localhost:5000/`);
 });
 
 export default app;

@@ -1,18 +1,20 @@
 <div class="max-w-6xl mx-auto p-4 md:p-8 font-['Inter']">
 
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-        <h2 class="text-3xl font-bold text-white tracking-tight">Tournaments</h2>
+        <div>
+            <h2 class="text-3xl font-bold text-white tracking-tight">Tournaments</h2>
+            <p class="text-slate-500 text-sm mt-1">Manage and track all your football competitions</p>
+        </div>
         <button id="openModalBtn"
             class="flex items-center justify-center gap-2 bg-emerald-400 hover:bg-emerald-500 text-gray-900 px-6 py-3 rounded-xl font-bold transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-emerald-400/20">
-
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
             </svg>
-
             Create Tournament
         </button>
     </div>
 
+    <!-- Search & Filter -->
     <div class="relative mb-10 group">
         <div
             class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-emerald-400 transition-colors">
@@ -22,125 +24,110 @@
             </svg>
         </div>
         <input type="text" placeholder="Search tournaments..."
-            class="w-full bg-gray-900 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:border-emerald-400 transition-all">
+            class="w-full bg-gray-900 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-slate-100 placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:border-emerald-400 transition-all">
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        <div
-            class="bg-gray-900 border border-white/5 rounded-2xl p-6 hover:border-emerald-400/30 transition-all group shadow-xl">
-            <div class="flex justify-between items-start mb-6">
-                <h3 class="text-xl font-bold text-white leading-tight">Kerala<br>eFootball Cup</h3>
-                <span
-                    class="px-3 py-1 bg-emerald-400/10 text-emerald-400 text-[10px] font-bold uppercase tracking-wider rounded-full border border-emerald-400/20">Active</span>
-            </div>
+        <% if (tournaments && tournaments.length > 0) { %>
+            <% tournaments.forEach(t => { 
+                const isUpcoming = new Date(t.startDate) > new Date();
+                const status = isUpcoming ? 'Upcoming' : 'Active';
+                const statusColor = isUpcoming ? 'yellow' : 'emerald';
+            %>
+                <!-- Tournament Card -->
+                <div class="bg-gray-900 border border-white/10 rounded-2xl p-6 hover:border-<%= statusColor %>-400/30 transition-all group shadow-xl relative overflow-hidden">
+                    <div class="flex justify-between items-start mb-6">
+                        <h3 class="text-xl font-bold text-white leading-tight">
+                            <%- t.name.replace(' ', '<br>') %>
+                        </h3>
+                        <div class="flex gap-2">
+                            <button title="Add Player" class="p-2 bg-white/5 hover:bg-emerald-500/20 hover:text-emerald-400 rounded-lg text-slate-400 transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                            </button>
+                            <button title="Edit Tournament" class="p-2 bg-white/5 hover:bg-blue-500/20 hover:text-blue-400 rounded-lg text-slate-400 transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            </button>
+                        </div>
+                    </div>
 
-            <div class="space-y-3 mb-8">
-                <div
-                    class="flex items-center gap-2 text-blue-400 bg-blue-400/5 w-fit px-2 py-1 rounded text-[11px] font-bold uppercase">
-                    League
-                </div>
-                <div class="flex items-center gap-2 text-slate-400 text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
-                    8 Players
-                </div>
-                <div class="flex items-center gap-2 text-slate-400 text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    Jan 15, 2024
-                </div>
-            </div>
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="px-3 py-1 bg-<%= statusColor %>-400/10 text-<%= statusColor %>-400 text-[10px] font-bold uppercase tracking-wider rounded-full border border-<%= statusColor %>-400/20">
+                            <%= status %>
+                        </span>
+                    </div>
 
-            <div class="flex gap-3">
-                <button
-                    class="flex-1 bg-white/5 hover:bg-white/10 text-white text-sm font-semibold py-2 rounded-lg transition-colors">View</button>
-                <button
-                    class="flex-1 bg-emerald-400/10 hover:bg-emerald-400/20 text-emerald-400 text-sm font-semibold py-2 rounded-lg transition-colors border border-emerald-400/20">Edit</button>
-            </div>
-        </div>
+                    <div class="space-y-3 mb-8">
+                        <div class="flex items-center gap-2 text-blue-400 bg-blue-400/5 w-fit px-2 py-1 rounded text-[11px] font-bold uppercase">
+                            <%= t.type %>
+                        </div>
+                        <div class="flex items-center gap-2 text-slate-400 text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                            <%= t.players %> Players
+                        </div>
+                        <div class="flex items-center gap-2 text-slate-400 text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <%= new Date(t.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+                        </div>
+                    </div>
 
-        <div
-            class="bg-gray-900 border border-white/5 rounded-2xl p-6 hover:border-yellow-400/30 transition-all group shadow-xl">
-            <div class="flex justify-between items-start mb-6">
-                <h3 class="text-xl font-bold text-white leading-tight">Champions<br>League 2024</h3>
-                <span
-                    class="px-3 py-1 bg-yellow-400/10 text-yellow-400 text-[10px] font-bold uppercase tracking-wider rounded-full border border-yellow-400/20">Upcoming</span>
-            </div>
+                    <div class="flex gap-3">
+                        <% if (status === 'Active') { %>
+                            <a href="/admin/add-members/<%= t._id %>" class="flex-1 bg-emerald-400 text-gray-900 text-xs font-bold py-2.5 rounded-lg hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-400/20 text-center">Enter Scores</a>
+                            <a href="/admin/add-members/<%= t._id %>" class="flex-1 bg-white/5 hover:bg-white/10 text-white text-xs font-bold py-2.5 rounded-lg transition-colors border border-white/10 text-center">View Standings</a>
+                        <% } else { %>
+                            <a href="/admin/add-members/<%= t._id %>" class="flex-1 bg-blue-500 text-white text-xs font-bold py-2.5 rounded-lg hover:bg-blue-600 transition-all shadow-lg shadow-blue-500/20 text-center">Generate Matches</a>
+                            <a href="/admin/add-members/<%= t._id %>" class="flex-1 bg-white/5 hover:bg-white/10 text-white text-xs font-bold py-2.5 rounded-lg transition-colors border border-white/10 text-center">Edit Info</a>
+                        <% } %>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <!-- Welcome Onboarding Section -->
+            <div class="col-span-full py-24 flex flex-col items-center justify-center bg-gray-900 border border-white/10 rounded-[2.5rem] shadow-2xl relative overflow-hidden group">
+                <!-- Background Glow -->
+                <div class="absolute -top-24 -left-24 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full"></div>
+                <div class="absolute -bottom-24 -right-24 w-64 h-64 bg-blue-500/10 blur-[100px] rounded-full"></div>
 
-            <div class="space-y-3 mb-8">
-                <div
-                    class="flex items-center gap-2 text-purple-400 bg-purple-400/5 w-fit px-2 py-1 rounded text-[11px] font-bold uppercase">
-                    Knockout
-                </div>
-                <div class="flex items-center gap-2 text-slate-400 text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                    </svg>
-                    16 Players
-                </div>
-                <div class="flex items-center gap-2 text-slate-400 text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    Feb 1, 2024
-                </div>
-            </div>
-
-            <div class="flex gap-3">
-                <button
-                    class="flex-1 bg-white/5 hover:bg-white/10 text-white text-sm font-semibold py-2 rounded-lg transition-colors">View</button>
-                <button
-                    class="flex-1 bg-emerald-400/10 hover:bg-emerald-400/20 text-emerald-400 text-sm font-semibold py-2 rounded-lg transition-colors border border-emerald-400/20">Edit</button>
-            </div>
-        </div>
-
-        <div
-            class="bg-gray-900 border border-white/5 rounded-2xl p-6 hover:border-red-400/30 transition-all group shadow-xl">
-            <div class="flex justify-between items-start mb-6">
-                <h3 class="text-xl font-bold text-white leading-tight">Weekend<br>Warriors Cup</h3>
-                <span
-                    class="px-3 py-1 bg-red-400/10 text-red-400 text-[10px] font-bold uppercase tracking-wider rounded-full border border-red-400/20">Completed</span>
-            </div>
-
-            <div class="space-y-3 mb-8">
-                <div
-                    class="flex items-center gap-2 text-blue-400 bg-blue-400/5 w-fit px-2 py-1 rounded text-[11px] font-bold uppercase">
-                    League
-                </div>
-                <div class="flex items-center gap-2 text-slate-400 text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                    </svg>
-                    12 Players
-                </div>
-                <div class="flex items-center gap-2 text-slate-400 text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    Dec 20, 2023
+                <div class="relative flex flex-col items-center text-center px-6">
+                    <div class="w-24 h-24 bg-emerald-500/10 rounded-3xl flex items-center justify-center mb-8 border border-emerald-500/20 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-[0_0_50px_rgba(16,185,129,0.1)]">
+                        <svg class="w-12 h-12 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-7.714 2.143L11 21l-2.286-6.857L1 12l7.714-2.143L11 3z"></path>
+                        </svg>
+                    </div>
+                    
+                    <h3 class="text-3xl sm:text-4xl font-black text-white mb-4 tracking-tight">Welcome to Tournament Maker!</h3>
+                    <p class="text-slate-400 text-base sm:text-lg mb-10 max-w-lg leading-relaxed">
+                        Ready to launch your first championship? Create a tournament, add your players, and start tracking live scores in minutes.
+                    </p>
+                    
+                    <button onclick="document.getElementById('openModalBtn').click()" 
+                        class="group/btn relative flex items-center gap-3 bg-emerald-400 hover:bg-emerald-500 text-gray-900 px-10 py-5 rounded-2xl font-black text-lg transition-all transform hover:scale-105 active:scale-95 shadow-[0_20px_50px_rgba(16,185,129,0.3)]">
+                        Create Your First Tournament
+                        <svg class="w-6 h-6 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                        </svg>
+                    </button>
+                    
+                    <div class="mt-12 flex gap-8">
+                        <div class="flex flex-col items-center gap-1">
+                            <span class="text-white font-bold text-lg">01</span>
+                            <span class="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Setup</span>
+                        </div>
+                        <div class="w-px h-8 bg-white/10"></div>
+                        <div class="flex flex-col items-center gap-1">
+                            <span class="text-slate-600 font-bold text-lg">02</span>
+                            <span class="text-slate-600 text-[10px] uppercase font-bold tracking-widest text-xs">Add Players</span>
+                        </div>
+                        <div class="w-px h-8 bg-white/10"></div>
+                        <div class="flex flex-col items-center gap-1">
+                            <span class="text-slate-600 font-bold text-lg">03</span>
+                            <span class="text-slate-600 text-[10px] uppercase font-bold tracking-widest text-xs">Play</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div class="flex gap-3">
-                <button
-                    class="flex-1 bg-white/5 hover:bg-white/10 text-white text-sm font-semibold py-2 rounded-lg transition-colors">View</button>
-                <button
-                    class="flex-1 bg-emerald-400/10 hover:bg-emerald-400/20 text-emerald-400 text-sm font-semibold py-2 rounded-lg transition-colors border border-emerald-400/20">Edit</button>
-            </div>
-        </div>
+        <% } %>
 
     </div>
 </div>
@@ -150,11 +137,13 @@
         const openBtn = document.getElementById('openModalBtn');
         const modal = document.getElementById('tournamentModal');
 
-        openBtn.addEventListener('click', () => {
-            modal.classList.remove('hidden');
-        });
+        if (openBtn && modal) {
+            openBtn.addEventListener('click', () => {
+                modal.classList.remove('hidden');
+            });
+        }
 
         function closeModal() {
-            modal.classList.add('hidden');
+            if (modal) modal.classList.add('hidden');
         }
     </script>
