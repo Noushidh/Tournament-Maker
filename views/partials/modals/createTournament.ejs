@@ -11,7 +11,7 @@
     <!-- Header -->
     <div class="mb-6 flex justify-between items-start">
       <div>
-        <h2 class="text-white text-xl sm:text-2xl font-bold tracking-tight">Create Tournament</h2>
+        <h2 id="modalTitle" class="text-white text-xl sm:text-2xl font-bold tracking-tight">Create Tournament</h2>
         <p class="text-emerald-500/80 text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold mt-1">Football
           Championship</p>
       </div>
@@ -24,11 +24,12 @@
 
     <!-- Form -->
     <form id="tournamentForm" class="space-y-5">
-
+      <input type="hidden" name="tournamentId" id="tournamentIdInput">
+      
       <!-- Name -->
       <div class="space-y-1.5">
         <label class="text-gray-400 text-xs font-semibold uppercase tracking-wider ml-1">Tournament Name</label>
-        <input type="text" name="name" placeholder="e.g. Summer League 2024"
+        <input type="text" name="name" id="nameInput" placeholder="e.g. Summer League 2024"
           class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-600 focus:outline-none focus:border-lime-500/50 focus:ring-1 focus:ring-lime-500/50 transition-all">
         <p id="nameError" class="text-red-400 text-[11px] mt-1 hidden flex items-center gap-1.5 ml-1">
           <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
@@ -45,15 +46,15 @@
         <label class="text-gray-400 text-xs font-semibold uppercase tracking-wider ml-1">Tournament Format</label>
         <div class="flex flex-wrap gap-2">
           <input type="hidden" name="type" id="formatInput" value="League">
-          <button type="button" onclick="setFormat('League', this)" 
+          <button type="button" onclick="setFormat('League', this)"
             class="format-chip flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all border border-white/10 bg-lime-500 text-black shadow-[0_0_15px_rgba(132,204,22,0.2)]">
             League
           </button>
-          <button type="button" onclick="setFormat('Knockout', this)" 
+          <button type="button" onclick="setFormat('Knockout', this)"
             class="format-chip flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10">
             Knockout
           </button>
-          <button type="button" onclick="setFormat('Groups + Knockout', this)" 
+          <button type="button" onclick="setFormat('Groups + Knockout', this)"
             class="format-chip flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10">
             Groups + Knockout
           </button>
@@ -83,27 +84,31 @@
           <!-- Win -->
           <div class="space-y-1">
             <span class="text-gray-500 text-[10px] uppercase font-bold text-center block">Win</span>
-            <input type="number" value="3" name="win"
+            <input type="number" value="3" name="win" id="winInput"
               class="w-full bg-black/20 border border-white/10 rounded-lg px-2 py-2 text-white text-center focus:border-lime-500/50 outline-none transition-all">
           </div>
 
           <!-- Draw -->
           <div class="space-y-1">
             <span class="text-gray-500 text-[10px] uppercase font-bold text-center block">Draw</span>
-            <input type="number" value="1" name="draw"
+            <input type="number" value="1" name="draw" id="drawInput"
               class="w-full bg-black/20 border border-white/10 rounded-lg px-2 py-2 text-white text-center focus:border-lime-500/50 outline-none transition-all">
           </div>
 
           <!-- Loss -->
           <div class="space-y-1">
             <span class="text-gray-500 text-[10px] uppercase font-bold text-center block">Loss</span>
-            <input type="number" value="0" name="loss"
+            <input type="number" value="0" name="loss" id="lossInput"
               class="w-full bg-black/20 border border-white/10 rounded-lg px-2 py-2 text-white text-center focus:border-lime-500/50 outline-none transition-all">
           </div>
         </div>
         <p id="pointsError" class="text-red-400 text-[11px] mt-1 hidden flex items-center gap-1.5 ml-1">
-            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
-            <span></span>
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+              clip-rule="evenodd"></path>
+          </svg>
+          <span></span>
         </p>
       </div>
 
@@ -160,6 +165,8 @@
 
     const playersInput = document.getElementById("playersInput");
     const startDateInput = document.getElementById("startDateInput");
+    const tournamentIdInput = document.getElementById("tournamentIdInput");
+    const modalTitle = document.getElementById("modalTitle");
 
     // Helper: Show Toast
     function showToast(message, type = 'success') {
@@ -211,8 +218,18 @@
 
     // Helper: Set Tournament Format
     window.setFormat = (format, btn) => {
-      document.getElementById('formatInput').value = format;
+      if (typeof btn === 'string') {
+          // If btn is just a string format, find the chip
+          const chips = document.querySelectorAll('.format-chip');
+          chips.forEach(chip => {
+              if (chip.textContent.trim() === format) {
+                  btn = chip;
+              }
+          });
+      }
       
+      document.getElementById('formatInput').value = format;
+
       // Reset all chips
       document.querySelectorAll('.format-chip').forEach(chip => {
         chip.classList.remove('bg-lime-500', 'text-black', 'shadow-[0_0_15px_rgba(132,204,22,0.2)]');
@@ -220,8 +237,49 @@
       });
 
       // Activate clicked chip
-      btn.classList.add('bg-lime-500', 'text-black', 'shadow-[0_0_15px_rgba(132,204,22,0.2)]');
-      btn.classList.remove('bg-white/5', 'text-gray-400', 'hover:bg-white/10');
+      if (btn) {
+          btn.classList.add('bg-lime-500', 'text-black', 'shadow-[0_0_15px_rgba(132,204,22,0.2)]');
+          btn.classList.remove('bg-white/5', 'text-gray-400', 'hover:bg-white/10');
+      }
+    };
+
+    // Global function to open modal for editing
+    window.openTournamentEditModal = (tournament) => {
+        const modal = document.getElementById('tournamentModal');
+        modal.classList.remove('hidden');
+        
+        // Change UI to Edit mode
+        modalTitle.textContent = "Edit Tournament";
+        btnText.textContent = "Update Tournament";
+        
+        // Fill form
+        tournamentIdInput.value = tournament._id;
+        document.getElementById('nameInput').value = tournament.name;
+        document.getElementById('playersInput').value = tournament.players;
+        document.getElementById('winInput').value = tournament.pointsSystem.win;
+        document.getElementById('drawInput').value = tournament.pointsSystem.draw;
+        document.getElementById('lossInput').value = tournament.pointsSystem.loss;
+        
+        const date = new Date(tournament.startDate).toISOString().split('T')[0];
+        document.getElementById('startDateInput').value = date;
+        
+        window.setFormat(tournament.type);
+    };
+
+    // Reset modal on close
+    const originalCloseModal = window.closeModal;
+    window.closeModal = () => {
+        form.reset();
+        tournamentIdInput.value = "";
+        modalTitle.textContent = "Create Tournament";
+        btnText.textContent = "Create Tournament";
+        window.setFormat('League', document.querySelector('.format-chip'));
+        
+        // Clear errors
+        ['nameError', 'playersError', 'dateError', 'pointsError'].forEach(id => setError(id, null));
+        
+        const modal = document.getElementById('tournamentModal');
+        if (modal) modal.classList.add('hidden');
     };
 
     form.addEventListener("submit", async (e) => {
@@ -231,8 +289,9 @@
       ['nameError', 'playersError', 'dateError', 'pointsError'].forEach(id => setError(id, null));
 
       const formData = new FormData(form);
+      const tournamentId = formData.get("tournamentId");
       const name = formData.get("name");
-      const type = formData.get("type"); // 🔥 Added format type
+      const type = formData.get("type");
       const players = Number(formData.get("players"));
       const startDate = formData.get("startDate");
 
@@ -271,35 +330,36 @@
 
       // Points System Validation
       if (isNaN(win) || isNaN(draw) || isNaN(loss)) {
-          setError('pointsError', "All points must be valid numbers");
-          hasError = true;
+        setError('pointsError', "All points must be valid numbers");
+        hasError = true;
       } else if (win < 0 || draw < 0 || loss < 0) {
-          setError('pointsError', "Points cannot be negative");
-          hasError = true;
+        setError('pointsError', "Points cannot be negative");
+        hasError = true;
       } else if (!Number.isInteger(win) || !Number.isInteger(draw) || !Number.isInteger(loss)) {
-          setError('pointsError', "Points must be whole numbers");
-          hasError = true;
+        setError('pointsError', "Points must be whole numbers");
+        hasError = true;
       } else if (win > 10 || draw > 10 || loss > 10) {
-          setError('pointsError', "Points cannot exceed 10");
-          hasError = true;
+        setError('pointsError', "Points cannot exceed 10");
+        hasError = true;
       } else if (win <= draw || win <= loss) {
-          setError('pointsError', "Win points must be greater than Draw and Loss");
-          hasError = true;
+        setError('pointsError', "Win points must be greater than Draw and Loss");
+        hasError = true;
       } else if (draw < loss) {
-          setError('pointsError', "Draw points must be greater than or equal to Loss");
-          hasError = true;
+        setError('pointsError', "Draw points must be greater than or equal to Loss");
+        hasError = true;
       }
 
       if (hasError) return;
 
       // Set Loading State
       submitBtn.disabled = true;
-      btnText.textContent = "Creating...";
+      const isEdit = !!tournamentId;
+      btnText.textContent = isEdit ? "Updating..." : "Creating...";
       loadingSpinner.classList.remove("hidden");
 
       const data = {
         name,
-        type, // 🔥 Sending format type
+        type,
         players,
         pointsSystem: {
           win: Number(formData.get("win")),
@@ -310,24 +370,31 @@
       };
 
       try {
-        const res = await axios.post("/admin/createtournament", data);
-        showToast("Tournament created successfully! ✅");
-        form.reset();
-        window.setFormat('League', document.querySelector('.format-chip'));
+        let res;
+        if (isEdit) {
+            res = await axios.post(`/admin/update-tournament/${tournamentId}`, data);
+            showToast("Tournament updated successfully! ✅");
+        } else {
+            res = await axios.post("/admin/createtournament", data);
+            showToast("Tournament created successfully! ✅");
+        }
         
         setTimeout(() => {
           if (typeof closeModal === 'function') closeModal();
-          // 🔥 Redirect to Add Members page for this specific tournament
-          const tournamentId = res.data.tournament._id;
-          window.location.href = `/admin/add-members/${tournamentId}`;
+          if (isEdit) {
+              window.location.reload();
+          } else {
+              const tournamentId = res.data.tournament._id;
+              window.location.href = `/admin/add-members/${tournamentId}`;
+          }
         }, 1000);
       } catch (err) {
         console.error(err);
-        const errMsg = err.response?.data?.message || "Failed to create tournament. Please try again.";
+        const errMsg = err.response?.data?.message || `Failed to ${isEdit ? 'update' : 'create'} tournament. Please try again.`;
         showToast(errMsg, 'error');
       } finally {
         submitBtn.disabled = false;
-        btnText.textContent = "Create Tournament";
+        btnText.textContent = isEdit ? "Update Tournament" : "Create Tournament";
         loadingSpinner.classList.add("hidden");
       }
     });

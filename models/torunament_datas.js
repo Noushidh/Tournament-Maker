@@ -38,7 +38,20 @@ const tournamentSchema = new mongoose.Schema(
     startDate: {
       type: Date,
       required: true
-    }
+    },
+
+    members: [
+      {
+        playerName: {
+          type: String,
+          required: true
+        },
+        team: {
+          type: String,
+          required: true
+        }
+      }
+    ]
   },
   {
     timestamps: true 

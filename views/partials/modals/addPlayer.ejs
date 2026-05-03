@@ -1,0 +1,320 @@
+<!-- Tom Select CSS -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+
+<style>
+  /* Tom Select Dark Theme Overrides */
+  .ts-control {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 0.75rem !important;
+    padding: 0.75rem 1rem !important;
+    color: white !important;
+    transition: all 0.2s ease;
+  }
+
+  .ts-control:focus {
+    border-color: rgba(16, 185, 129, 0.5) !important;
+    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.5) !important;
+  }
+
+  .is-invalid .ts-control {
+    border-color: rgba(239, 68, 68, 0.5) !important;
+    box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.2) !important;
+  }
+
+  .ts-dropdown {
+    background: #0f172a !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 0.75rem !important;
+    margin-top: 0.5rem !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
+    color: white !important;
+    z-index: 100 !important;
+  }
+
+  .ts-dropdown .active {
+    background: rgba(16, 185, 129, 0.1) !important;
+    color: #10b981 !important;
+  }
+
+  .ts-dropdown .option {
+    padding: 0.75rem 1rem !important;
+    cursor: pointer;
+  }
+
+  .ts-dropdown .option.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .ts-dropdown .option:hover:not(.disabled) {
+    background: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  .ts-control input {
+    color: white !important;
+  }
+
+  .ts-wrapper.single .ts-control::after {
+    border-color: #64748b transparent transparent transparent !important;
+  }
+</style>
+
+<div id="addPlayerModal"
+  class="hidden fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4 transition-all duration-300">
+
+  <!-- Modal Box -->
+  <div
+    class="w-full max-w-lg bg-[#0f172a] rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-8 sm:p-10 overflow-hidden relative animate-in zoom-in duration-300">
+
+    <!-- Decoration Gradient -->
+    <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
+
+    <!-- Header -->
+    <div class="mb-8 flex justify-between items-start">
+      <div>
+        <h2 id="modalPlayerTitle" class="text-white text-2xl sm:text-3xl font-bold tracking-tight">Add Player</h2>
+        <p class="text-emerald-400 text-xs uppercase tracking-[0.2em] font-bold mt-2 opacity-80">Championship Management</p>
+      </div>
+      <button onclick="closeAddPlayerModal()" class="group p-2 bg-white/5 rounded-full hover:bg-red-500/10 transition-all">
+        <svg class="w-6 h-6 text-gray-400 group-hover:text-red-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Form -->
+    <form id="addPlayerForm" action="/admin/add-member/<%= tournament._id %>" method="POST" class="space-y-6" novalidate>
+      <input type="hidden" name="editMemberId" id="editMemberId">
+      
+      <!-- Player Name Input -->
+      <div class="space-y-2">
+        <label class="text-slate-400 text-[10px] font-bold uppercase tracking-widest ml-1">Player Name</label>
+        <input type="text" id="playerNameInput" name="playerName" placeholder="Enter player name..."
+          class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-600 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all">
+        <p id="playerNameError" class="text-red-400 text-[11px] ml-1 hidden"></p>
+      </div>
+
+      <!-- Select Team -->
+      <div class="space-y-2">
+        <label class="text-slate-400 text-[10px] font-bold uppercase tracking-widest ml-1">Assign Team</label>
+        <select id="teamSelect" name="team" placeholder="Search or create team..." autocomplete="off">
+          <option value="">Select a team...</option>
+          <option value="Argentina" data-flag="🇦🇷">Argentina</option>
+          <option value="Brazil" data-flag="🇧🇷">Brazil</option>
+          <option value="France" data-flag="🇫🇷">France</option>
+          <option value="Germany" data-flag="🇩🇪">Germany</option>
+          <option value="Portugal" data-flag="🇵🇹">Portugal</option>
+          <option value="Spain" data-flag="🇪🇸">Spain</option>
+          <option value="Morocco" data-flag="🇲🇦">Morocco</option>
+          <option value="Japan" data-flag="🇯🇵">Japan</option>
+        </select>
+        <p id="teamError" class="text-red-400 text-[11px] ml-1 hidden"></p>
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="flex flex-col sm:flex-row gap-4 pt-6">
+        <button type="button" onclick="closeAddPlayerModal()"
+          class="w-full sm:flex-1 bg-slate-800/50 hover:bg-slate-800 text-slate-300 py-4 rounded-2xl text-sm font-bold border border-white/5 transition-all">
+          Cancel
+        </button>
+
+        <button type="submit" id="addPlayerSubmitBtn" disabled
+          class="w-full sm:flex-1 bg-emerald-500 text-gray-900 py-4 rounded-2xl text-sm font-black hover:bg-emerald-400 transition-all shadow-[0_10px_30px_rgba(16,185,129,0.3)] disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none flex items-center justify-center gap-2">
+          <span id="playerBtnText">Add to Tournament</span>
+          <svg id="playerBtnIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Tom Select JS -->
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
+<script>
+  let teamTomSelect;
+  const playerNameInput = document.getElementById('playerNameInput');
+  const addPlayerSubmitBtn = document.getElementById('addPlayerSubmitBtn');
+  const playerBtnText = document.getElementById('playerBtnText');
+  const playerNameError = document.getElementById('playerNameError');
+  const teamError = document.getElementById('teamError');
+  const editMemberId = document.getElementById('editMemberId');
+  const modalPlayerTitle = document.getElementById('modalPlayerTitle');
+  const addPlayerForm = document.getElementById('addPlayerForm');
+
+  // Dynamic taken teams from EJS
+  const takenTeams = <%- JSON.stringify(takenTeams) %>;
+  let currentEditingTeam = "";
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Team Select
+    teamTomSelect = new TomSelect('#teamSelect', {
+      create: true,
+      render: {
+        option: function(data, escape) {
+          const isTaken = takenTeams.some(t => t.toLowerCase() === data.text.toLowerCase()) && data.text.toLowerCase() !== currentEditingTeam.toLowerCase();
+          const flag = data.flag || '🏳️';
+          return `<div class="flex items-center justify-between gap-3 ${isTaken ? 'disabled' : ''}">
+                    <div class="flex items-center gap-3">
+                      <span class="text-lg">${escape(flag)}</span>
+                      <span class="font-medium">${escape(data.text)}</span>
+                    </div>
+                    ${isTaken ? '<span class="text-[9px] uppercase font-bold text-red-400 bg-red-400/10 px-2 py-0.5 rounded-full">Taken</span>' : ''}
+                  </div>`;
+        },
+        item: function(data, escape) {
+          const flag = data.flag || '🏳️';
+          return `<div class="flex items-center gap-3">
+                    <span class="text-lg">${escape(flag)}</span>
+                    <span class="font-medium">${escape(data.text)}</span>
+                  </div>`;
+        }
+      },
+      onChange: () => {
+        validateTeam();
+        checkGlobalValidation();
+      }
+    });
+
+    playerNameInput.addEventListener('input', () => {
+      validatePlayerName();
+      checkGlobalValidation();
+    });
+
+    // Form Submission
+    addPlayerForm.addEventListener('submit', (e) => {
+      if (!checkGlobalValidation(true)) {
+        e.preventDefault();
+      }
+    });
+  });
+
+  // Global function to open modal for editing
+  window.openEditPlayerModal = (member, tournamentId) => {
+      const modal = document.getElementById('addPlayerModal');
+      modal.classList.remove('hidden');
+      
+      modalPlayerTitle.textContent = "Edit Player";
+      playerBtnText.textContent = "Update Player";
+      editMemberId.value = member._id;
+      playerNameInput.value = member.playerName;
+      currentEditingTeam = member.team;
+      
+      // Update form action
+      addPlayerForm.action = `/admin/update-member/${tournamentId}/${member._id}`;
+      
+      // Update TomSelect
+      teamTomSelect.setValue(member.team);
+      
+      // Icons update
+      document.getElementById('playerBtnIcon').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>';
+      
+      validatePlayerName();
+      validateTeam();
+      checkGlobalValidation();
+  };
+
+  function validatePlayerName() {
+    const val = playerNameInput.value.trim();
+    const regex = /^[a-zA-Z0-9 ]+$/;
+    
+    if (!val) {
+      setError(playerNameInput, playerNameError, "Player name is required");
+      return false;
+    } else if (val.length < 2 || val.length > 50) {
+      setError(playerNameInput, playerNameError, "Name must be between 2 and 50 characters");
+      return false;
+    } else if (!regex.test(val)) {
+      setError(playerNameInput, playerNameError, "Only letters, numbers, and spaces allowed");
+      return false;
+    }
+    
+    clearError(playerNameInput, playerNameError);
+    return true;
+  }
+
+  function validateTeam() {
+    const val = teamTomSelect.getValue();
+    const text = teamTomSelect.getItem(val)?.textContent?.trim() || "";
+    
+    if (!val) {
+      setError(teamTomSelect.wrapper, teamError, "Please select or create a team");
+      return false;
+    } else if (val.length < 2) {
+      setError(teamTomSelect.wrapper, teamError, "Team name must be at least 2 characters");
+      return false;
+    } else if (takenTeams.some(t => t.toLowerCase() === val.toLowerCase()) && val.toLowerCase() !== currentEditingTeam.toLowerCase()) {
+      setError(teamTomSelect.wrapper, teamError, "This team is already taken in this tournament");
+      return false;
+    }
+
+    clearError(teamTomSelect.wrapper, teamError);
+    return true;
+  }
+
+  function setError(inputEl, errorEl, message) {
+    inputEl.classList.add('border-red-500/50', 'ring-red-500/20', 'is-invalid');
+    inputEl.classList.remove('border-white/10', 'focus:border-emerald-500/50');
+    errorEl.textContent = message;
+    errorEl.classList.remove('hidden');
+  }
+
+  function clearError(inputEl, errorEl) {
+    inputEl.classList.remove('border-red-500/50', 'ring-red-500/20', 'is-invalid');
+    inputEl.classList.add('border-white/10');
+    errorEl.classList.add('hidden');
+  }
+
+  function checkGlobalValidation(isSubmit = false) {
+    const isPlayerValid = validatePlayerName();
+    const isTeamValid = validateTeam();
+    
+    const isValid = isPlayerValid && isTeamValid;
+    addPlayerSubmitBtn.disabled = !isValid;
+    
+    if (isValid) {
+      addPlayerSubmitBtn.classList.add('animate-pulse-subtle');
+    } else {
+      addPlayerSubmitBtn.classList.remove('animate-pulse-subtle');
+    }
+    
+    return isValid;
+  }
+
+  function closeAddPlayerModal() {
+    const modal = document.getElementById('addPlayerModal');
+    modal.classList.add('hidden');
+    
+    // Reset state
+    editMemberId.value = "";
+    modalPlayerTitle.textContent = "Add Player";
+    playerBtnText.textContent = "Add to Tournament";
+    addPlayerForm.action = "/admin/add-member/<%= tournament._id %>";
+    playerNameInput.value = '';
+    teamTomSelect.clear();
+    currentEditingTeam = "";
+    
+    document.getElementById('playerBtnIcon').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>';
+    
+    clearError(playerNameInput, playerNameError);
+    clearError(teamTomSelect.wrapper, teamError);
+    addPlayerSubmitBtn.disabled = true;
+  }
+
+  document.getElementById('addPlayerModal').addEventListener('click', (e) => {
+    if (e.target.id === 'addPlayerModal') closeAddPlayerModal();
+  });
+</script>
+
+<style>
+  @keyframes pulse-subtle {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.01); }
+  }
+  .animate-pulse-subtle {
+    animation: pulse-subtle 2s infinite ease-in-out;
+  }
+</style>
